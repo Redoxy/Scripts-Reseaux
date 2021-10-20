@@ -4,23 +4,35 @@
 #from netmiko import ConnectHandler
 import ipaddress
 import os
+import sys
 import threading
 import queue
+
+def sanity_checks(line_to_check):
+    print(f'Cheking line : {line_to_check}')
+    if line_to_check == 'reload' or line_to_check == 'conf t':
+        print(f'Commande : {line_to_check} interdite!')
+        sys.exit()
+    print(f'Line : {line_to_check}: OK')
 
 cmd = []
 
 with open('input/commands', 'r') as cmd_file:
     for line in cmd_file:
+        line = line.strip()
+        sanity_checks(line)
         cmd.append(line)
 
 hosts = []
 
 with open('input/hosts', 'r') as host_file:
     for line in host_file:
-        line = line.upper()
+        line = (line.strip()).upper()
         hosts.append(line)
 
 q= queue.Queue()
+
+
 
 def worker():
     while True:
