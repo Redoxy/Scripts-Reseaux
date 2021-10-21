@@ -6,13 +6,14 @@ import sys
 import threading
 import queue
 
-def get_cdp_neighbor_details(ip, username, password):
+def get_cdp_neighbor_details(ip, username, password, secret):
 
     ssh_connection = ConnectHandler(
         device_type='cisco_ios',
         ip=ip,
         username=username,
         password=password,
+        secret=secret,
     )
 
     ssh_connection.enable()
