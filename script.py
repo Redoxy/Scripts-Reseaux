@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 # _*_ coding: utf-8-unix _*_
 
-#from netmiko import ConnectHandler
+from netmiko import ConnectHandler
 import ipaddress
 import os
 import sys
@@ -32,15 +32,30 @@ with open('input/hosts', 'r') as host_file:
 
 q= queue.Queue()
 
+def remote_con(ip):
+    print(f'Connecting to {ip}')  
+    ssh_connection = ConnectHandler(
+        device_type='cisco_ios',
+        ip=ip,
+        username="admin",
+        password="admin",
+        secret="cisco",
+    )
+
+    ssh_connection.enable()
+    print(f'Connection to {item} : OK')
+    return(ssh_connection)
+
 
 
 def worker():
     while True:
         item = q.get()
-        print(f'Working on {item}')
+        ssh = remote_con(item)
         for each in cmd:
-            print(f'Command :{each} sent to device : {item}')
+            result = ssh.send_command("show cdp neighbor detail", delay_factor=2)
         print(f'Finished {item}')
+        print(result)
         q.task_done()
 
 # Turn-on the worker thread
