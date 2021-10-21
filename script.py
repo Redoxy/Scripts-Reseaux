@@ -2,8 +2,6 @@
 # _*_ coding: utf-8-unix _*_
 
 from netmiko import ConnectHandler
-import ipaddress
-import os
 import sys
 import threading
 import queue
