@@ -43,7 +43,7 @@ def remote_con(ip):
     )
 
     ssh_connection.enable()
-    print(f'Connection to {item} : OK')
+    print(f'Connection to {ip} : OK')
     return(ssh_connection)
 
 
@@ -53,9 +53,9 @@ def worker():
         item = q.get()
         ssh = remote_con(item)
         for each in cmd:
-            result = ssh.send_command("show cdp neighbor detail", delay_factor=2)
+            result = ssh.send_command(each, delay_factor=2)
+            print(result)
         print(f'Finished {item}')
-        print(result)
         q.task_done()
 
 # Turn-on the worker thread
