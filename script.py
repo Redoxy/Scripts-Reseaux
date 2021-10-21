@@ -48,7 +48,7 @@ def remote_con(ip):
 
 
 
-def worker():
+def worker(q):
     while True:
         item = q.get()
         ssh = remote_con(item)
@@ -58,8 +58,11 @@ def worker():
         print(f'Finished {item}')
         q.task_done()
 
-# Turn-on the worker thread
-threading.Thread(target=worker, daemon=True).start()
+num_threads = 2
+
+for i in range(num_threads):
+    work = threading.Thread(target=worker, daemon=True, args=(q,)).start()
+
 
 # Send task
 for each in hosts:
