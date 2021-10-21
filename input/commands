@@ -1,4 +1,1 @@
-term len 0
-sh run
-sh logg
-sh ip nat statistics
+show cdp neighbor
