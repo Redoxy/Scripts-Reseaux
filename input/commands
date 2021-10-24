@@ -1,1 +1,2 @@
 show cdp neighbor
+sh ip int brie
