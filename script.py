@@ -5,6 +5,8 @@ from netmiko import ConnectHandler
 import sys
 import threading
 import queue
+import json
+import datetime
 
 def sanity_checks(line_to_check):
     print(f'Cheking line : {line_to_check}')
@@ -44,15 +46,18 @@ def remote_con(ip):
     print(f'Connection to {ip} : OK')
     return(ssh_connection)
 
-
+output = {}
 
 def worker(q):
     while True:
         item = q.get()
         ssh = remote_con(item)
+        data = {}
+        prompt = (ssh.find_prompt()).strip('#')
         for each in cmd:
             result = ssh.send_command(each, delay_factor=2)
-            print(result)
+            data[each]=result
+            output[prompt]=data
         print(f'Finished {item}')
         q.task_done()
 
@@ -70,4 +75,7 @@ print('All task requests sent\n', end='')
 #block until all task are done
 q.join()
 print('All work completed')
+print(output)
 
+with open('data.json', 'w') as f:
+    json.dump(output, f)
